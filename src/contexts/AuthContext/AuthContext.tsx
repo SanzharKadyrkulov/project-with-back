@@ -1,5 +1,14 @@
-import React, { FC, ReactNode, createContext, useContext } from "react";
-import { IAuthContextTypes } from "./types";
+import React, {
+	FC,
+	ReactNode,
+	createContext,
+	useContext,
+	useState,
+} from "react";
+import { IAuthContextTypes, ITokens, IUserLogin, IUserRegister } from "./types";
+import axios from "axios";
+import { BASE_URL } from "../../utils/consts";
+import $axios from "../../utils/axios";
 
 const authContext = createContext<IAuthContextTypes | null>(null);
 
@@ -11,8 +20,41 @@ interface IAuthContextProps {
 	children: ReactNode;
 }
 const AuthContext: FC<IAuthContextProps> = ({ children }) => {
+	const [user, setUser] = useState(null);
+
+	async function register(credentials: IUserRegister) {
+		try {
+			await axios.post(`${BASE_URL}/account/register/`, credentials);
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	async function login(credentials: IUserLogin) {
+		try {
+			const { data: tokens } = await axios.post<ITokens>(
+				`${BASE_URL}/account/login/`,
+				credentials
+			);
+			localStorage.setItem("tokens", JSON.stringify(tokens));
+
+			const { data } = await $axios.get(`${BASE_URL}/account/profile/`);
+			setUser(data);
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	function logout() {
+		localStorage.removeItem("tokens");
+		setUser(null);
+	}
+
 	const value = {
-		user: null,
+		user,
+		register,
+		login,
+		logout,
 	};
 	return <authContext.Provider value={value}>{children} </authContext.Provider>;
 };

@@ -14,6 +14,8 @@ import { IconButton, InputAdornment } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useAuthContext } from "../contexts/AuthContext/AuthContext";
+import { IUserLogin, IUserRegister } from "../contexts/AuthContext/types";
+import { Navigate } from "react-router-dom";
 
 function Copyright(props: any) {
 	return (
@@ -39,14 +41,31 @@ const defaultTheme = createTheme();
 export default function AuthPage() {
 	const [isLogin, setIsLogin] = useState(true);
 	const [showPassword, setShowPassword] = useState(false);
-	const { user } = useAuthContext();
-	console.log(user);
+	const { user, register, login } = useAuthContext();
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
-		console.log(...data);
+
+		if (isLogin) {
+			const credentials = {
+				email: data.get("email"),
+				password: data.get("password"),
+			} as IUserLogin;
+			login(credentials);
+		} else {
+			const credentials = {
+				email: data.get("email"),
+				password: data.get("password"),
+				password_confirm: data.get("password_confirm"),
+			} as IUserRegister;
+			register(credentials);
+		}
 	};
+
+	if (user) {
+		return <Navigate to="/" />;
+	}
 
 	return (
 		<ThemeProvider theme={defaultTheme}>
