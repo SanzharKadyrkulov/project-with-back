@@ -8,6 +8,7 @@ import React, {
 import {
 	IProductContextActions,
 	IProductContextTypes,
+	IProductCreate,
 	initStateProducts,
 } from "./types";
 import $axios from "../../utils/axios";
@@ -57,11 +58,46 @@ const ProductContext: FC<ProductContextProps> = ({ children }) => {
 		}
 	}
 
+	async function addProduct(newProduct: any) {
+		try {
+			console.log(...newProduct);
+
+			await $axios.post(`${BASE_URL}/products/`, newProduct);
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	async function deleteProduct(id: number) {
+		try {
+			await $axios.delete(`${BASE_URL}/products/${id}/`);
+			getProducts();
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	async function getCategories() {
+		try {
+			const { data } = await $axios.get(`${BASE_URL}/category/list/`);
+
+			dispatch({
+				type: "categories",
+				payload: data.results,
+			});
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
 	const value = {
 		products: state.products,
 		oneProduct: state.oneProduct,
 		categories: state.categories,
 		getProducts,
+		getCategories,
+		addProduct,
+		deleteProduct,
 	};
 	return (
 		<productContext.Provider value={value}>{children}</productContext.Provider>

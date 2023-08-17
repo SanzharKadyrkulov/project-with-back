@@ -8,6 +8,9 @@ export interface initStateProducts {
 
 export interface IProductContextTypes extends initStateProducts {
 	getProducts: () => void;
+	getCategories: () => void;
+	addProduct: (newProduct: any) => void;
+	deleteProduct: (id: number) => void;
 }
 
 interface IProductsAction {
@@ -26,3 +29,11 @@ export type IProductContextActions =
 	| IProductsAction
 	| IOneProductAction
 	| ICategoriesAction;
+
+export interface IProductCreate {
+	title: string;
+	description: string;
+	price: string;
+	image: File;
+	category: number;
+}

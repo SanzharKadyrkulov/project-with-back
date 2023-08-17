@@ -11,7 +11,6 @@ import { useAuthContext } from "../contexts/AuthContext/AuthContext";
 
 export default function Navbar() {
 	const { user, logout } = useAuthContext();
-	console.log(user);
 
 	return (
 		<Box sx={{ flexGrow: 1 }}>
@@ -26,9 +25,15 @@ export default function Navbar() {
 					>
 						<MenuIcon />
 					</IconButton>
-					<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+					<Typography variant="h6" component={Link} to="/">
 						News
 					</Typography>
+
+					<Box sx={{ display: "flex", ml: 2, flexGrow: 1 }}>
+						<Button component={Link} to="/add" sx={{ color: "white" }}>
+							Add Product
+						</Button>
+					</Box>
 
 					{user ? (
 						<Box display="flex" alignItems="center" gap={1}>
