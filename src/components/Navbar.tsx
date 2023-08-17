@@ -11,6 +11,8 @@ import { useAuthContext } from "../contexts/AuthContext/AuthContext";
 
 export default function Navbar() {
 	const { user, logout } = useAuthContext();
+	console.log(user);
+
 	return (
 		<Box sx={{ flexGrow: 1 }}>
 			<AppBar position="static">
@@ -31,7 +33,15 @@ export default function Navbar() {
 					{user ? (
 						<Box display="flex" alignItems="center" gap={1}>
 							<Typography>{user.email}</Typography>
-							<Button onClick={logout} sx={{ color: "white" }}>
+							<Button
+								onClick={logout}
+								sx={{
+									color: "white",
+									"&:hover": {
+										backgroundColor: "red",
+									},
+								}}
+							>
 								Logout
 							</Button>
 						</Box>

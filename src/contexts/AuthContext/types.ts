@@ -5,6 +5,7 @@ export interface IAuthContextTypes {
 	register: (credentials: IUserRegister) => void;
 	login: (credentials: IUserLogin) => void;
 	logout: () => void;
+	checkAuth: () => void;
 }
 
 export interface IUserLogin {

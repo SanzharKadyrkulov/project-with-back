@@ -16,7 +16,7 @@ $axios.interceptors.response.use(
 	(res) => res,
 	async (error) => {
 		const originalRequest = error.config;
-		if (error.response.status === 403 && !originalRequest._retry) {
+		if (error.response.status === 401 && !originalRequest._retry) {
 			originalRequest._retry = true;
 			const tokens = JSON.parse(localStorage.getItem("tokens") as string);
 			if (tokens) {

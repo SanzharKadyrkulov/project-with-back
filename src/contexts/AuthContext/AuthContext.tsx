@@ -24,7 +24,7 @@ const AuthContext: FC<IAuthContextProps> = ({ children }) => {
 
 	async function register(credentials: IUserRegister) {
 		try {
-			await axios.post(`${BASE_URL}/account/register/`, credentials);
+			await axios.post<ITokens>(`${BASE_URL}/account/register/`, credentials);
 		} catch (e) {
 			console.log(e);
 		}
@@ -50,11 +50,24 @@ const AuthContext: FC<IAuthContextProps> = ({ children }) => {
 		setUser(null);
 	}
 
+	async function checkAuth() {
+		try {
+			const tokens = JSON.parse(localStorage.getItem("tokens") as string);
+			if (tokens) {
+				const { data } = await $axios.get(`${BASE_URL}/account/profile/`);
+				setUser(data);
+			}
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
 	const value = {
 		user,
 		register,
 		login,
 		logout,
+		checkAuth,
 	};
 	return <authContext.Provider value={value}>{children} </authContext.Provider>;
 };
