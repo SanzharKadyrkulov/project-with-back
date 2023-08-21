@@ -14,12 +14,14 @@ import {
 	SelectChangeEvent,
 } from "@mui/material";
 import { useProductContext } from "../contexts/ProductContext/ProductContext";
+import { useNavigate, useParams } from "react-router-dom";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function AddProductPage() {
-	const { categories, getCategories, addProduct } = useProductContext();
+export default function EditProductPage() {
+	const { categories, getCategories, oneProduct, getOneProduct, editProduct } =
+		useProductContext();
 	const [formValue, setFormValue] = useState({
 		title: "",
 		description: "",
@@ -28,9 +30,23 @@ export default function AddProductPage() {
 		category: "",
 	});
 
+	const { id } = useParams() as { id: string };
+	const navigate = useNavigate();
+
 	useEffect(() => {
 		getCategories();
+		getOneProduct(+id);
 	}, []);
+
+	useEffect(() => {
+		if (oneProduct) {
+			setFormValue({
+				...oneProduct,
+				category: oneProduct.category.id.toString(),
+				image: "",
+			});
+		}
+	}, [oneProduct]);
 
 	function handleChange(
 		e:
@@ -59,7 +75,6 @@ export default function AddProductPage() {
 			!formValue.title.trim() ||
 			!formValue.description.trim() ||
 			!formValue.price.trim() ||
-			!formValue.image ||
 			!formValue.category
 		) {
 			alert("fill all fields");
@@ -68,15 +83,14 @@ export default function AddProductPage() {
 
 		const data = new FormData(event.currentTarget);
 
-		addProduct(data);
+		if (!formValue.image) {
+			data.delete("image");
 
-		setFormValue({
-			title: "",
-			description: "",
-			price: "",
-			image: "",
-			category: "",
-		});
+			editProduct(+id, data);
+		} else {
+			editProduct(+id, data);
+		}
+		navigate(-1);
 	};
 
 	return (
@@ -92,7 +106,7 @@ export default function AddProductPage() {
 					}}
 				>
 					<Typography component="h1" variant="h5">
-						New Product
+						Edit Product
 					</Typography>
 					<Box
 						component="form"
@@ -161,7 +175,7 @@ export default function AddProductPage() {
 							variant="contained"
 							sx={{ mt: 3, mb: 2 }}
 						>
-							Add New Product
+							Save
 						</Button>
 					</Box>
 				</Box>

@@ -8,6 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext/AuthContext";
+import LiveSearch from "./LiveSearch";
 
 export default function Navbar() {
 	const { user, logout } = useAuthContext();
@@ -34,6 +35,8 @@ export default function Navbar() {
 							Add Product
 						</Button>
 					</Box>
+
+					<LiveSearch />
 
 					{user ? (
 						<Box display="flex" alignItems="center" gap={1}>

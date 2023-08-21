@@ -11,6 +11,8 @@ export interface IProductContextTypes extends initStateProducts {
 	getCategories: () => void;
 	addProduct: (newProduct: any) => void;
 	deleteProduct: (id: number) => void;
+	getOneProduct: (id: number) => void;
+	editProduct: (id: number, newData: any) => void;
 }
 
 interface IProductsAction {

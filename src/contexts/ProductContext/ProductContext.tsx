@@ -47,7 +47,9 @@ const ProductContext: FC<ProductContextProps> = ({ children }) => {
 
 	async function getProducts() {
 		try {
-			const { data } = await $axios.get(`${BASE_URL}/products/`);
+			const { data } = await $axios.get(
+				`${BASE_URL}/products/${window.location.search}`
+			);
 
 			dispatch({
 				type: "products",
@@ -58,10 +60,21 @@ const ProductContext: FC<ProductContextProps> = ({ children }) => {
 		}
 	}
 
+	async function getOneProduct(id: number) {
+		try {
+			const { data } = await $axios.get(`${BASE_URL}/products/${id}/`);
+
+			dispatch({
+				type: "oneProduct",
+				payload: data,
+			});
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
 	async function addProduct(newProduct: any) {
 		try {
-			console.log(...newProduct);
-
 			await $axios.post(`${BASE_URL}/products/`, newProduct);
 		} catch (e) {
 			console.log(e);
@@ -71,6 +84,16 @@ const ProductContext: FC<ProductContextProps> = ({ children }) => {
 	async function deleteProduct(id: number) {
 		try {
 			await $axios.delete(`${BASE_URL}/products/${id}/`);
+
+			getProducts();
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	async function editProduct(id: number, newData: any) {
+		try {
+			await $axios.patch(`${BASE_URL}/products/${id}/`, newData);
 			getProducts();
 		} catch (e) {
 			console.log(e);
@@ -98,6 +121,8 @@ const ProductContext: FC<ProductContextProps> = ({ children }) => {
 		getCategories,
 		addProduct,
 		deleteProduct,
+		getOneProduct,
+		editProduct,
 	};
 	return (
 		<productContext.Provider value={value}>{children}</productContext.Provider>

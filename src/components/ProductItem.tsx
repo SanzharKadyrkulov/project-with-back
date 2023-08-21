@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import { IProduct } from "../models/product";
 import { Grid } from "@mui/material";
 import { useProductContext } from "../contexts/ProductContext/ProductContext";
+import { Link } from "react-router-dom";
 
 interface IProps {
 	item: IProduct;
@@ -36,7 +37,9 @@ export default function ProductItem({ item }: IProps) {
 					<Button onClick={() => deleteProduct(item.id)} size="small">
 						Delete
 					</Button>
-					<Button size="small">Edit</Button>
+					<Button component={Link} to={`/edit/${item.id}`} size="small">
+						Edit
+					</Button>
 				</CardActions>
 			</Card>
 		</Grid>
